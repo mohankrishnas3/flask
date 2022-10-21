@@ -4,6 +4,7 @@ from flask import request
 import threading
 import logging
 from flask.logging import default_handler
+import json
 
 
 from rake_nltk import Rake
@@ -293,6 +294,15 @@ def text_summarizer(sentence_summary):
   return result
 
 
+def toxicity(sentence_toxicity):
+  from detoxify import Detoxify
+  results = Detoxify('original').predict(sentence_toxicity)
+  if (results['toxicity'] > 0.4):
+    output = "toxic"
+  else:
+    output = "not toxic"
+  return output
+
 app = Flask(__name__)
 app.debug = True
 config = None
@@ -321,19 +331,50 @@ def hello(name):
 @app.route('/sentiment/<string:name1>/')
 def hello1(name1):
     sentiment1 = sentiment(name1)
-    return sentiment1
+    sentiment_string = "{'status':'True', 'sentiment':'"+sentiment1 +"'}"
+    Dict_sentiment = eval(sentiment_string)
+    json_sentiment = json.dumps(Dict_sentiment, indent = 4)
+    # print(json_sentiment)
+    return json_sentiment
+#positive, negative
 
 @app.route('/summary/<string:name2>/')
 def hello2(name2):
     summary1 = text_summarizer(name2)
-    return summary1
+    summary_string = "{'status':'True', 'summary':'"+summary1 +"'}"
+    Dict_summary = eval(summary_string)
+    json_summary = json.dumps(Dict_summary, indent = 4)
+    # print(json_summary)
+    return json_summary
+#summary
 
 @app.route('/similarity/<string:name3>/<string:name4>/')
 def hello3(name3, name4):
     similarity1 = text_similarity_2(name3, name4)
-    return similarity1
+    similarity1_string = "{'status':'True', 'similarity':'"+similarity1 +"'}"
+    Dict_similarity = eval(similarity1_string)
+    json_similarity = json.dumps(Dict_similarity, indent = 4)
+    # print(json_similarity)
+    return json_similarity
+#score between 0 to 1, closer to 0 means not similiar and closer to 1 means more similar
+#toxicity will be yes or no. Yes means
+
+@app.route('/toxicity/<string:name5>/')
+def hello4(name5):
+    toxicity1 = toxicity(name5)
+    toxicity1_string = "{'status':'True', 'result':'"+toxicity1 +"'}"
+    Dict_toxicity = eval(toxicity1_string)
+    json_toxicity = json.dumps(Dict_toxicity, indent = 4)
+    # print(json_toxicity)
+    # return json_similarity
+    return json_toxicity
+
+
 
 if __name__ == '__main__':
     extracted_words = extract_keywords_using_distil_bert("Lawton, who was sentenced to 12 years in prison for stealing roughly $12 million in diamonds and gold from jewelers at gunpoint, said the smash-and-grabs happening across the United States are organized and could be related to gang initiations. However, he said, they could be prevented", 3, 5);
     
-    app.run(host= '127.0.0.1', port=8090)
+    # app.run(host= '127.0.0.1', port=8090)
+    app.run()
+
+
