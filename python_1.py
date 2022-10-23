@@ -5,6 +5,8 @@ import threading
 import logging
 from flask.logging import default_handler
 import json
+import requests
+
 
 
 from rake_nltk import Rake
@@ -272,7 +274,13 @@ def text_similarity_2(first_sentence, second_sentence):
       [sentence_embeddings[1]]
   )
   # type(text_similarity)
-  return str(float(text_similarity[0]))
+  if (float(text_similarity[0]) > 0.7):
+    output_sim = "similar"
+  else:
+    output_sim = "not similar"
+  return output_sim
+
+  # return str(float(text_similarity[0]))
 
 
 def sentiment(sentence_sentiment):
@@ -317,6 +325,9 @@ logging.basicConfig(level=logging.DEBUG,
 # def welcome():
 #     return "Hello World!"
 
+# @app.route("/")
+# def index():
+#     return render_template("indexflask.html", WelcomeNote = "Welcome")
 
 
 @app.route('/<string:name>/')
@@ -370,11 +381,90 @@ def hello4(name5):
     return json_toxicity
 
 
+@app.route('/alltext/', methods=['POST'])
+def query_records():
+    name = request.get_json()
+    my_dictionary = dict()
+    print(name["dosimilarity"])
+    count = 0 
+    # if(name["dosimilarity"]):
+    #   for i in name["alltext"]:
+    #     for key, value in i.items():          
+    #       for j in i[key]:
+    #         print(j)
+    #         print("after append")
+    #         my_dictionary.clear()
+    #         my_dictionary[j]= "Positive"#sentiment(j)
+    #         my_dictionary_copy = my_dictionary.copy()
+    #         j = my_dictionary_copy
+    #         # print(name["alltext"][i]) 
+    #         print(j)
+
+    if(name["dosentiment"]):
+      for index in range(len(name["alltext"])):
+        for key, value in name["alltext"][index].items():          
+          for index2 in range(len( name["alltext"][index][key] )):
+            print(name["alltext"][index][key][index2])
+            print("after append")
+            my_dictionary.clear()
+            my_dictionary[ name["alltext"][index][key][index2] ]= sentiment(name["alltext"][index][key][index2])
+            my_dictionary_copy = my_dictionary.copy()
+            name["alltext"][index][key][index2] = my_dictionary_copy
+            # print(name["alltext"][i]) 
+            print(name["alltext"][index][key][index2])
+      return name #jsonify({'error': 'data not found'})
+
+    if(name["dotoxicity"]):
+      for index in range(len(name["alltext"])):
+        for key, value in name["alltext"][index].items():          
+          for index2 in range(len( name["alltext"][index][key] )):
+            print(name["alltext"][index][key][index2])
+            print("after append")
+            my_dictionary.clear()
+            my_dictionary[ name["alltext"][index][key][index2] ]= toxicity(name["alltext"][index][key][index2])
+            my_dictionary_copy = my_dictionary.copy()
+            name["alltext"][index][key][index2] = my_dictionary_copy
+            # print(name["alltext"][i]) 
+            print(name["alltext"][index][key][index2])
+      return name
+
+
+    if(name["dosimilarity"]):
+      for index in range(len(name["alltext"])):
+        for key, value in name["alltext"][index].items():          
+          for index2 in range(len( name["alltext"][index][key] )):
+            print(name["alltext"][index][key][index2])
+            print("after append")
+            my_dictionary.clear()
+            my_dictionary[ name["alltext"][index][key][index2] ]= text_similarity_2(name["alltext"][index][key][index2], name["clickedtext"])
+            my_dictionary_copy = my_dictionary.copy()
+            name["alltext"][index][key][index2] = my_dictionary_copy
+            # print(name["alltext"][i]) 
+            print(name["alltext"][index][key][index2])
+      return name
+
+    my_list = []
+    my_list.clear()
+    if(name["dosummary"]):
+      for index in range(len(name["alltext"])):
+        for key, value in name["alltext"][index].items():          
+          for index2 in range(len( name["alltext"][index][key] )):
+            print(name["alltext"][index][key][index2])
+            print("after append")
+            my_list.append(name["alltext"][index][key][index2])
+
+      my_string = '.'.join(my_list)
+      name["summarytext"] = text_summarizer(my_string)
+
+      return name    
+
+
+
 
 if __name__ == '__main__':
     extracted_words = extract_keywords_using_distil_bert("Lawton, who was sentenced to 12 years in prison for stealing roughly $12 million in diamonds and gold from jewelers at gunpoint, said the smash-and-grabs happening across the United States are organized and could be related to gang initiations. However, he said, they could be prevented", 3, 5);
     
-    # app.run(host= '127.0.0.1', port=8090)
-    app.run()
+    app.run(host= '127.0.0.1', port=8090)
+    # app.run()
 
 
