@@ -418,6 +418,7 @@ def query_records():
       for index in range(len(name["alltext"])):
         for key, value in name["alltext"][index].items():          
           for index2 in range(len( name["alltext"][index][key] )):
+            print("sentence is ")
             print(name["alltext"][index][key][index2])
             print("after append")
             my_dictionary.clear()
