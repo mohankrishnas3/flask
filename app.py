@@ -533,11 +533,5 @@ def query_records():
 
 
 if __name__ == "__main__":
-    extracted_words = extract_keywords_using_distil_bert(
-        "Lawton, who was sentenced to 12 years in prison for stealing roughly $12 million in diamonds and gold from jewelers at gunpoint, said the smash-and-grabs happening across the United States are organized and could be related to gang initiations. However, he said, they could be prevented",
-        3,
-        5,
-    )
-
     app.run(host="0.0.0.0")
     # app.run()
