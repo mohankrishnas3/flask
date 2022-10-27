@@ -366,29 +366,6 @@ CORS(app)
 
 # cors = CORS(app, resources={r"/*": {"origins": "http://localhost:port"}})
 
-# api_v1_cors_config = {
-#   "origins": ["*"],
-# "methods": ["OPTIONS", "GET", "POST"],
-#   "allow_headers": ["Content-Type"]
-# }
-# CORS(app, resources={"/*": api_v1_cors_config})
-
-
-# CORS(app)
-
-# app = Flask(__name__)
-# app.debug = True
-# config = None
-
-# app.config["SECRET_KEY"] = "the quick brown fox jumps over the lazy   dog"
-# app.config["CORS_HEADERS"] = "Content-Type"
-# # cors = CORS(app)
-# # cors = CORS(app, resources={r'/alltext/*': {'origins': '*'}})
-
-# CORS(app)
-# logging.basicConfig(
-#     level=logging.DEBUG,
-#     format="(%(threadName)-10s) %(message)s",
 # )
 
 
