@@ -356,10 +356,12 @@ def toxicity(sentence_toxicity):
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy   dog'
-app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app)
 
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:port"}})
+# app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy   dog'
+# app.config['CORS_HEADERS'] = 'Content-Type'
+
+# cors = CORS(app, resources={r"/*": {"origins": "http://localhost:port"}})
 
 # api_v1_cors_config = {
 #   "origins": ["*"],
@@ -457,7 +459,7 @@ def hello4(name5):
 
 
 @app.route("/alltext/", methods=["POST"])
-@cross_origin(origin='localhost',headers=['Content- Type'])
+@cross_origin()
 def query_records():
     name = request.get_json()
     my_dictionary = dict()
