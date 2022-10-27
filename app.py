@@ -354,10 +354,12 @@ def toxicity(sentence_toxicity):
         output = "not toxic"
     return output
 
-
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
+
+# app = Flask(__name__)
+# cors = CORS(app)
+# app.config['CORS_HEADERS'] = 'Content-Type'
 
 # app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy   dog'
 # app.config['CORS_HEADERS'] = 'Content-Type'
@@ -394,7 +396,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route("/<string:name>/")
-@cross_origin()
+# @cross_origin()
 def hello(name):
     # extracted_words = extract_keywords_using_rake(summarize_bert(name))
     extracted_words = extract_keywords_using_distil_bert(name, 1, 5)
@@ -405,7 +407,7 @@ def hello(name):
 
 
 @app.route("/sentiment/<string:name1>/")
-@cross_origin()
+# @cross_origin()
 def hello1(name1):
     sentiment1 = sentiment(name1)
     sentiment_string = "{'status':'True', 'sentiment':'" + sentiment1 + "'}"
@@ -419,7 +421,7 @@ def hello1(name1):
 
 
 @app.route("/summary/<string:name2>/")
-@cross_origin()
+# @cross_origin()
 def hello2(name2):
     summary1 = text_summarizer(name2)
     summary_string = "{'status':'True', 'summary':'" + summary1 + "'}"
@@ -433,7 +435,7 @@ def hello2(name2):
 
 
 @app.route("/similarity/<string:name3>/<string:name4>/")
-@cross_origin()
+# @cross_origin()
 def hello3(name3, name4):
     similarity1 = text_similarity_2(name3, name4)
     similarity1_string = "{'status':'True', 'similarity':'" + similarity1 + "'}"
@@ -448,7 +450,7 @@ def hello3(name3, name4):
 
 
 @app.route("/toxicity/<string:name5>/")
-@cross_origin()
+# @cross_origin()
 def hello4(name5):
     toxicity1 = toxicity(name5)
     toxicity1_string = "{'status':'True', 'result':'" + toxicity1 + "'}"
@@ -460,7 +462,7 @@ def hello4(name5):
 
 
 @app.route("/alltext/", methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def query_records():
     name = request.get_json()
     my_dictionary = dict()
